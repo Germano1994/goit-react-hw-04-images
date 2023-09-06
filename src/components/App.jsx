@@ -17,6 +17,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isLastPage, setIsLastPage] = useState(false);
 
   const fetchImages = (query, page) => {
     if (!query) return;
@@ -30,6 +31,13 @@ const App = () => {
       .then((data) => {
         setImages((prevImages) => [...prevImages, ...data.hits]);
         setLoading(false);
+
+        
+        if (data.hits.length < PER_PAGE) {
+          setIsLastPage(true);
+        } else {
+          setIsLastPage(false);
+        }
       })
       .catch((error) => {
         console.error('Error fetching images:', error);
@@ -41,6 +49,7 @@ const App = () => {
     setQuery(newQuery);
     setImages([]);
     setPage(1);
+    setIsLastPage(false); 
   };
 
   const loadMoreImages = () => {
@@ -67,7 +76,7 @@ const App = () => {
       <Searchbar onSubmit={handleSearch} />
       <ImageGallery images={images} onImageClick={openModal} />
       {loading && <Loader />}
-      {images.length > 0 && !loading && (
+      {images.length > 0 && !loading && !isLastPage && (
         <Button onClick={loadMoreImages}>Load More</Button>
       )}
       {selectedImage && <Modal image={selectedImage} onClose={closeModal} />}

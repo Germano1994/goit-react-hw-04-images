@@ -12,6 +12,9 @@ const Searchbar = ({ onSubmit }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     onSubmit(query);
+    
+  
+    setQuery('');
   };
 
   return (
@@ -42,3 +45,4 @@ Searchbar.propTypes = {
 };
 
 export default Searchbar;
+
